@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#SBATCH --partition=iliad
+#SBATCH --partition=iris-hi
 #SBATCH --time=120:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=64G
 #SBATCH --gres=gpu:1
-#SBATCH --account=iliad
+#SBATCH --account=iris
 #SBATCH --output=runs/floq_script/%A.out
 #SBATCH --error=runs/floq_script/%A.err
 #SBATCH --job-name="floq"
@@ -20,16 +20,21 @@ set -euo pipefail
 # - seed
 # - agent.alpha
 # - agent.value_hidden_dims (optional)
+# - agent.block_width (optional)
+# - agent.block_depth (optional)
 ENV_NAME="cube-double-play-singletask-v0"
 SEED="0"
 ALPHA="10"
 # Default matches the agent config default in agents/floq.py
 VALUE_HIDDEN_DIMS="(512, 512, 512, 512)"
+# Defaults match the agent config defaults in agents/floq.py
+BLOCK_WIDTH="512"
+BLOCK_DEPTH="4"
 
 usage() {
   cat <<'EOF'
 Usage:
-  sbatch floq_script/run_temp_single.sh --env_name ENV --seed SEED --alpha ALPHA [--value_hidden_dims DIMS]
+  sbatch floq_script/run_temp_single.sh --env_name ENV --seed SEED --alpha ALPHA [--value_hidden_dims DIMS] [--block_width W] [--block_depth D]
 
 Examples:
   sbatch floq_script/run_temp_single.sh \
@@ -65,6 +70,12 @@ while [[ $# -gt 0 ]]; do
     --value_hidden_dims)
       VALUE_HIDDEN_DIMS="${2:-}"; shift 2
       ;;
+    --block_width)
+      BLOCK_WIDTH="${2:-}"; shift 2
+      ;;
+    --block_depth)
+      BLOCK_DEPTH="${2:-}"; shift 2
+      ;;
     *)
       echo "[run_temp_single] unknown argument: $1" >&2
       usage
@@ -93,6 +104,12 @@ echo "[run_temp_single] agent.alpha=${ALPHA}"
 if [[ -n "${VALUE_HIDDEN_DIMS}" ]]; then
   echo "[run_temp_single] agent.value_hidden_dims=${VALUE_HIDDEN_DIMS}"
 fi
+if [[ -n "${BLOCK_WIDTH}" ]]; then
+  echo "[run_temp_single] agent.block_width=${BLOCK_WIDTH}"
+fi
+if [[ -n "${BLOCK_DEPTH}" ]]; then
+  echo "[run_temp_single] agent.block_depth=${BLOCK_DEPTH}"
+fi
 
 PY_ARGS=(
   python main.py
@@ -106,6 +123,12 @@ PY_ARGS=(
 
 if [[ -n "${VALUE_HIDDEN_DIMS}" ]]; then
   PY_ARGS+=(--agent.value_hidden_dims="${VALUE_HIDDEN_DIMS}")
+fi
+if [[ -n "${BLOCK_WIDTH}" ]]; then
+  PY_ARGS+=(--agent.block_width="${BLOCK_WIDTH}")
+fi
+if [[ -n "${BLOCK_DEPTH}" ]]; then
+  PY_ARGS+=(--agent.block_depth="${BLOCK_DEPTH}")
 fi
 
 "${PY_ARGS[@]}"

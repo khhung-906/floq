@@ -120,9 +120,23 @@ def main(_):
             config,
     )
 
+    # Print parameter counts for key submodules (useful for sanity-checking model size).
+    params = getattr(getattr(agent, "network", None), "params", None)
+    if params is not None:
+        for module_key in ("modules_critic", "modules_floq"):
+            if module_key in params:
+                param_count = sum(x.size for x in jax.tree_util.tree_leaves(params[module_key]))
+                print(f"[param_count] {module_key}: {param_count:,} params")
+            else:
+                print(f"[param_count] {module_key}: <not present>")
+    else:
+        print("[param_count] agent has no agent.network.params; skipping param count")
+
     # Restore agent.
     if FLAGS.restore_path is not None:
         agent = restore_agent(agent, FLAGS.restore_path, FLAGS.restore_epoch)
+
+    
 
     # Train agent.
     train_logger = CsvLogger(os.path.join(FLAGS.save_dir, 'train.csv'))
