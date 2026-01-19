@@ -5,10 +5,10 @@ set -euo pipefail
 # Sweep env_name, seed, and value_hidden_dims (as lists); keep alpha fixed.
 ENV_NAMES=(
   "cube-triple-play-singletask-task1-v0"
-  # "cube-triple-play-singletask-task2-v0"
-  # "cube-triple-play-singletask-task3-v0"
-  # "cube-triple-play-singletask-task4-v0"
-  # "cube-triple-play-singletask-task5-v0"
+  "cube-triple-play-singletask-task2-v0"
+  "cube-triple-play-singletask-task3-v0"
+  "cube-triple-play-singletask-task4-v0"
+  "cube-triple-play-singletask-task5-v0"
 )
 SEEDS=(1 2 3)
 
