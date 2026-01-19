@@ -10,7 +10,7 @@ ENV_NAMES=(
   "cube-triple-play-singletask-task4-v0"
   "cube-triple-play-singletask-task5-v0"
 )
-SEEDS=(1 2 3 4 5)
+SEEDS=(1 2 3)
 
 # agent.alpha to pass into floq_script/run_temp_single.sh
 ALPHA="300"
