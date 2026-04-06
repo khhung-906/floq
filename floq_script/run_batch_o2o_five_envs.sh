@@ -7,10 +7,10 @@ set -euo pipefail
 ENV_NAMES=(
   # "cube-double-play-singletask-task2-v0"
   # "puzzle-3x3-play-singletask-task4-v0"
-  "puzzle-4x4-play-singletask-task4-v0"
-  "cube-triple-play-singletask-task1-v0"
-  # "scene-play-singletask-task2-v0"
-  # "antmaze-large-navigate-singletask-task1-v0"
+  # "puzzle-4x4-play-singletask-task4-v0"
+  # "cube-triple-play-singletask-task1-v0"
+  "scene-play-singletask-task2-v0"
+  "antmaze-large-navigate-singletask-task1-v0"
 )
 
 declare -A ALPHA_BY_ENV=(
