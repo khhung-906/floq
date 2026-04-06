@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=iliad
+#SBATCH --partition=sc-loprio
 #SBATCH --time=120:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=10
@@ -19,16 +19,21 @@ set -euo pipefail
 # - seed
 # - agent.alpha
 # - agent.value_hidden_dims
+# - offline_steps / online_steps (offline-to-online when online_steps > 0)
+# - project_name (W&B project prefix; full project is project_name+env_name in main.py)
 ENV_NAME="cube-triple-play-singletask-task1-v0"
 SEED="0"
 ALPHA="10"
+PROJECT_NAME="fql"
+OFFLINE_STEPS="1000000"
+ONLINE_STEPS="0"
 # Default matches the agent config default in agents/fql_iqn.py
 VALUE_HIDDEN_DIMS="(512, 512, 512, 512)"
 
 usage() {
   cat <<'EOF'
 Usage:
-  sbatch fql_script/run_fql_single.sh --env_name ENV --seed SEED --alpha ALPHA [--value_hidden_dims DIMS]
+  sbatch fql_script/run_fql_single.sh --env_name ENV --seed SEED --alpha ALPHA [--value_hidden_dims DIMS] [--offline_steps N] [--online_steps N] [--project_name NAME]
 
 Examples:
   sbatch fql_script/run_fql_single.sh \
@@ -43,6 +48,8 @@ Examples:
 
 Notes:
   If --value_hidden_dims is omitted, defaults to (512, 512, 512, 512).
+  If --offline_steps / --online_steps are omitted, defaults to 1000000 offline and 0 online.
+  If --project_name is omitted, defaults to fql (use e.g. o2o_fql for offline-to-online sweeps).
 EOF
 }
 
@@ -63,6 +70,15 @@ while [[ $# -gt 0 ]]; do
       ;;
     --value_hidden_dims)
       VALUE_HIDDEN_DIMS="${2:-}"; shift 2
+      ;;
+    --offline_steps)
+      OFFLINE_STEPS="${2:-}"; shift 2
+      ;;
+    --online_steps)
+      ONLINE_STEPS="${2:-}"; shift 2
+      ;;
+    --project_name)
+      PROJECT_NAME="${2:-}"; shift 2
       ;;
     *)
       echo "[run_fql_single] unknown argument: $1" >&2
@@ -89,6 +105,9 @@ echo "[run_fql_single] env_name=${ENV_NAME}"
 echo "[run_fql_single] seed=${SEED}"
 echo "[run_fql_single] agent=agents/fql_iqn.py"
 echo "[run_fql_single] agent.alpha=${ALPHA}"
+echo "[run_fql_single] offline_steps=${OFFLINE_STEPS}"
+echo "[run_fql_single] online_steps=${ONLINE_STEPS}"
+echo "[run_fql_single] project_name=${PROJECT_NAME}"
 if [[ -n "${VALUE_HIDDEN_DIMS}" ]]; then
   echo "[run_fql_single] agent.value_hidden_dims=${VALUE_HIDDEN_DIMS}"
 fi
@@ -99,8 +118,10 @@ PY_ARGS=(
   --seed="${SEED}"
   --agent="agents/fql_iqn.py"
   --agent.alpha="${ALPHA}"
+  --offline_steps="${OFFLINE_STEPS}"
+  --online_steps="${ONLINE_STEPS}"
   --save_dir=runs/fql_test
-  --project_name=fql
+  --project_name="${PROJECT_NAME}"
 )
 
 if [[ -n "${VALUE_HIDDEN_DIMS}" ]]; then
@@ -108,4 +129,6 @@ if [[ -n "${VALUE_HIDDEN_DIMS}" ]]; then
 fi
 
 "${PY_ARGS[@]}"
+
+
 

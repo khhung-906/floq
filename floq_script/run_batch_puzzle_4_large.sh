@@ -7,10 +7,10 @@ ENV_NAMES=(
   "puzzle-4x4-play-singletask-task1-v0"
   "puzzle-4x4-play-singletask-task2-v0"
   "puzzle-4x4-play-singletask-task3-v0"
-  # "puzzle-4x4-play-singletask-task4-v0"
-  # "puzzle-4x4-play-singletask-task5-v0"
+  "puzzle-4x4-play-singletask-task4-v0"
+  "puzzle-4x4-play-singletask-task5-v0"
 )
-SEEDS=(1 2 3)
+SEEDS=(1 2 3 4)
 
 # agent.alpha to pass into floq_script/run_temp_single.sh
 ALPHA="1000"
@@ -22,10 +22,10 @@ VALUE_HIDDEN_DIMS="(512, 512, 512, 512)"
 # floq critic vector-field MLP size (not lists)
 # Defaults in agents/floq.py are block_width=512, block_depth=4.
 BLOCK_WIDTH_LIST=(
-  # 320
-  # 512
-  # 1536
-  2944
+  320
+  512
+  1536
+  # 2944
 )
 BLOCK_DEPTH="4"
 

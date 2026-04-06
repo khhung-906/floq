@@ -28,11 +28,14 @@
 #     --agent.alpha=300 \
 #     --project_name=floq
 
-# python -u main.py \
-#     --save_dir=runs/floq_test \
-#     --env_name=cube-triple-play-singletask-task1-v0 \
-#     --seed=3 \
-#     --agent=agents/floq.py \
-#     --agent.alpha=300 \
-#     --project_name=floq
+python -u main.py \
+    --save_dir=runs/floq_test \
+    --env_name=cube-triple-play-singletask-task1-v0 \
+    --seed=3 \
+    --agent=agents/floq.py \
+    --agent.value_hidden_dims="(320, 320, 320, 320)" \
+    --agent.block_width="320" \
+    --agent.block_depth="4" \
+    --agent.alpha=300 \
+    --project_name=floq
 

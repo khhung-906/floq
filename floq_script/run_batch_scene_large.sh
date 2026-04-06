@@ -4,16 +4,16 @@ set -euo pipefail
 
 # Only sweep env_name and seed (as lists), keep everything else fixed/default.
 ENV_NAMES=(
-  "puzzle-3x3-play-singletask-task1-v0"
-  "puzzle-3x3-play-singletask-task2-v0"
-  "puzzle-3x3-play-singletask-task3-v0"
-  "puzzle-3x3-play-singletask-task4-v0"
-  "puzzle-3x3-play-singletask-task5-v0"
+  # "scene-play-singletask-task1-v0"
+  # "scene-play-singletask-task2-v0"
+  # "scene-play-singletask-task3-v0"
+  "scene-play-singletask-task4-v0"
+  # "scene-play-singletask-task5-v0"
 )
-SEEDS=(1 2 3)
+SEEDS=(1 2 3 4 5)
 
 # agent.alpha to pass into floq_script/run_temp_single.sh
-ALPHA="1000"
+ALPHA="300"
 
 # agent.value_hidden_dims to pass into floq_script/run_temp_single.sh (not a list)
 # Use "" to fall back to floq_script/run_temp_single.sh / agent defaults.
@@ -24,8 +24,8 @@ VALUE_HIDDEN_DIMS="(512, 512, 512, 512)"
 BLOCK_WIDTH_LIST=(
   # 320
   # 512
-  # 1536
-  2944
+  1536
+  # 2944
 )
 BLOCK_DEPTH="4"
 
